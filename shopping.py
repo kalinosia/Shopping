@@ -23,7 +23,7 @@ def main():
     model = train_model(X_train, y_train)
     predictions = model.predict(X_test)
     sensitivity, specificity = evaluate(y_test, predictions)
-    print(y_test)
+
     # Print results
     print(f"Correct: {(y_test == predictions).sum()}")
     print(f"Incorrect: {(y_test != predictions).sum()}")
@@ -127,13 +127,9 @@ def load_data(filename):
                 bool_to_int(row['VisitorType']),
                 bool_to_int(row['Weekend'])
             ])
-            labels.append([bool_to_int(row['Revenue'])])
+            labels.append(bool_to_int(row['Revenue']))
 
-    #i=1
-    #for list in evidence:
-    #    print(i,". ",list)
-    #    i+=1
-    #print(len(evidence)) 12330
+    # print(len(evidence)) 12330
     return (evidence, labels)
     # raise NotImplementedError
 
@@ -148,11 +144,9 @@ def train_model(evidence, labels):
     # C:\Program Files (x86)\Python38-32\lib\site-packages\sklearn\neighbors\_classification.py:179:
     # DataConversionWarning: A column-vector y was passed when a 1d array was expected.
     # Please change the shape of y to (n_samples,), for example using ravel().
-
-    #   return self._fit(X, y)
     training = model.fit(evidence, np.ravel(labels))
-    # print(training)
-    return model
+
+    return training
 
     # raise NotImplementedError
 
@@ -179,25 +173,24 @@ def evaluate(labels, predictions):
     true_negative = 0  # the same and false
     actual_true = 0  # label is true, not matter what is prediction
     actual_false = 0  # -||- false
-    total = 0  # is that matter?? to check only
+    # total = 0  # is that matter?? to check only
 
     for label, prediction in zip(labels, predictions):
-        total += 1
-        # print(label,prediction) # -> [0] 0 ,so labels in list[]
-        if label[0] == prediction and label[0] == 1:
+        # total += 1
+        if label == prediction and label == 1:
             true_positive += 1
-        elif label[0] == prediction and label[0] == 0:
+        elif label == prediction and label == 0:
             true_negative += 1
-        if label[0] == 1:
-            actual_true +=1
-        elif label[0] == 0:
-            actual_false +=1
+        if label == 1:
+            actual_true += 1
+        elif label == 0:
+            actual_false += 1
 
-    sensitivity=true_positive/actual_true
-    specificity=true_negative/actual_false
-    # print(total)
+    sensitivity = true_positive/actual_true
+    specificity = true_negative/actual_false
+
     return sensitivity, specificity
-    #raise NotImplementedError
+    # raise NotImplementedError
 
 
 if __name__ == "__main__":
